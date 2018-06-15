@@ -15,6 +15,7 @@
     "http-errors": "~1.6.2",
     "mongoose": "^5.1.5",
     "morgan": "~1.9.0",
+    "populatedb": "^1.0.0",
     "pug": "2.0.0-beta11"
   },
   "devDependencies": {

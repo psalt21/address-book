@@ -12,11 +12,17 @@ var app = express();
 
 //Set up mongoose connection
 var mongoose = require('mongoose');
-var mongoDB = 'mongodb://<dbuser>:<dbpassword>@ds259820.mlab.com:59820/address_book';
+var mongoDB = 'mongodb://psalt21:Techguru1>@ds259820.mlab.com:59820/address_book';
 mongoose.connect(mongoDB);
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+// log connection status
+if(mongoose.connection.readyState === 0){
+    console.log('Warning: Mongoose is not connected!!!');
+}
+console.log('Current mongoose ready state:', mongoose.connection.readyState);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

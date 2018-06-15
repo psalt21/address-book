@@ -4,9 +4,9 @@ var Schema = mongoose.Schema;
 
 var AddressSchema = new Schema(
   {
-    first_name: {type: String, required: true, max: 100},
-    last_name: {type: String, required: true, max: 100},
-    address: {type: String, required: true, max: 100}
+      first_name: {type: String, required: true, max: 100},
+      last_name: {type: String, required: true, max: 100},
+      address: {type: String, required: true, max: 100}
   }
 );
 
@@ -14,7 +14,7 @@ var AddressSchema = new Schema(
 AddressSchema
 .virtual('name')
 .get(function () {
-  return this.last_name + ', ' + this.first_name;
+  return this.last_name + ', ' + this.first_name + ', ' + this.address;
 });
 
 // Virtual for address URL

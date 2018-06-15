@@ -25,12 +25,12 @@ exports.address_detail = function(req, res) {
     res.send('NOT IMPLEMENTED: Address detail: ' + req.params.id);
 };
 
-// Display Author create form on GET.
+// Display Address create form on GET.
 exports.address_create_get = function(req, res, next) {       
     res.render('address_form', { title: 'Create Address'});
 };
 
-// Handle Author create on POST.
+// Handle Address create on POST.
 exports.address_create_post = [
 
     // Validate fields.
@@ -38,10 +38,12 @@ exports.address_create_post = [
         .isAlphanumeric().withMessage('First name has non-alphanumeric characters.'),
     body('last_name').isLength({ min: 1 }).trim().withMessage('Last name must be specified.')
         .isAlphanumeric().withMessage('Last name has non-alphanumeric characters.'),
-
+    body('address').isLength({ min: 1 }).trim().withMessage('Address must be specified.'),
+    
     // Sanitize fields.
     sanitizeBody('first_name').trim().escape(),
     sanitizeBody('last_name').trim().escape(),
+    sanitizeBody('address').trim().escape(),
 
     // Process request after validation and sanitization.
     (req, res, next) => {
