@@ -1,0 +1,17 @@
+extends layout
+
+block content
+
+  h1 Name: #{address.name}
+  
+  div(style='margin-left:20px;margin-top:20px')
+
+    h4 Address
+    
+    dl
+    each address in addresses
+      dt 
+        a(href=address.url) #{address}
+
+    else
+      p This person has no address.

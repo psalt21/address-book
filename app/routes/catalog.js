@@ -6,6 +6,9 @@ var address_controller = require('../controllers/addressController');
 
 /// ADDRESS ROUTES ///
 
+// GET catalog home page.
+router.get('/', address_controller.index);  //This actually maps to /catalog/ because we import the route with a /catalog prefix
+
 // GET request for creating Address. NOTE This must come before route for id (i.e. display address).
 router.get('/address/create', address_controller.address_create_get);
 

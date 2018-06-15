@@ -1,4 +1,19 @@
+const { body,validationResult } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
 var Address = require('../models/address');
+
+var async = require('async');
+
+exports.index = function(req, res) {   
+    
+    async.parallel({
+        address_count: function(callback) {
+            Address.count({}, callback);
+        },
+    }, function(err, results) {
+        res.render('index', { title: 'Address Book Home', error: err, data: results });
+    });
+};
 
 // Display list of all Addresses.
 exports.address_list = function(req, res) {
@@ -10,15 +25,52 @@ exports.address_detail = function(req, res) {
     res.send('NOT IMPLEMENTED: Address detail: ' + req.params.id);
 };
 
-// Display Address create form on GET.
-exports.address_create_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Address create GET');
+// Display Author create form on GET.
+exports.address_create_get = function(req, res, next) {       
+    res.render('address_form', { title: 'Create Address'});
 };
 
-// Handle Address create on POST.
-exports.address_create_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Address create POST');
-};
+// Handle Author create on POST.
+exports.address_create_post = [
+
+    // Validate fields.
+    body('first_name').isLength({ min: 1 }).trim().withMessage('First name must be specified.')
+        .isAlphanumeric().withMessage('First name has non-alphanumeric characters.'),
+    body('last_name').isLength({ min: 1 }).trim().withMessage('Last name must be specified.')
+        .isAlphanumeric().withMessage('Last name has non-alphanumeric characters.'),
+
+    // Sanitize fields.
+    sanitizeBody('first_name').trim().escape(),
+    sanitizeBody('last_name').trim().escape(),
+
+    // Process request after validation and sanitization.
+    (req, res, next) => {
+
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            // There are errors. Render form again with sanitized values/errors messages.
+            res.render('address_form', { title: 'Create Address', author: req.body, errors: errors.array() });
+            return;
+        }
+        else {
+            // Data from form is valid.
+
+            // Create an Author object with escaped and trimmed data.
+            var address = new Address(
+                {
+                    first_name: req.body.first_name,
+                    last_name: req.body.last_name
+                });
+            address.save(function (err) {
+                if (err) { return next(err); }
+                // Successful - redirect to new author record.
+                res.redirect(address.url);
+            });
+        }
+    }
+];
 
 // Display Address delete form on GET.
 exports.address_delete_get = function(req, res) {
