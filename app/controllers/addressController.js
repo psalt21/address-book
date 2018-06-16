@@ -53,7 +53,7 @@ exports.address_create_post = [
 
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/errors messages.
-            res.render('address_form', { title: 'Create Address', author: req.body, errors: errors.array() });
+            res.render('address_form', { title: 'Create Address', address: req.body, errors: errors.array() });
             return;
         }
         else {
@@ -67,7 +67,7 @@ exports.address_create_post = [
                 });
             address.save(function (err) {
                 if (err) { return next(err); }
-                // Successful - redirect to new author record.
+                // Successful - redirect to new address record.
                 res.redirect(address.url);
             });
         }

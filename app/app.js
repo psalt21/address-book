@@ -12,7 +12,7 @@ var app = express();
 
 //Set up mongoose connection
 var mongoose = require('mongoose');
-var mongoDB = 'mongodb://psalt21:Techguru1>@ds259820.mlab.com:59820/address_book';
+var mongoDB = 'mongodb://psalt21:Techguru1@ds259820.mlab.com:59820/address_book';
 mongoose.connect(mongoDB);
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
@@ -47,6 +47,9 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
+    
+    console.log('500 error contains:', err, 'REQ CONTAINS:', req);
+    
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 

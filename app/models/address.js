@@ -6,7 +6,7 @@ var AddressSchema = new Schema(
   {
       first_name: {type: String, required: true, max: 100},
       last_name: {type: String, required: true, max: 100},
-      address: {type: String, required: true, max: 100}
+      address: {type: String, required: false, max: 100}
   }
 );
 
