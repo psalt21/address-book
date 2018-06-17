@@ -6,7 +6,7 @@ var AddressSchema = new Schema(
   {
       first_name: {type: String, required: true, max: 100},
       last_name: {type: String, required: true, max: 100},
-      address: {type: String, required: false, max: 100}
+      address: {type: String, required: true, max: 100}
   }
 );
 
@@ -14,14 +14,14 @@ var AddressSchema = new Schema(
 AddressSchema
 .virtual('name')
 .get(function () {
-  return this.last_name + ', ' + this.first_name + ', ' + this.address;
+  return this.last_name + ', ' + this.first_name;
 });
 
 // Virtual for address URL
 AddressSchema
 .virtual('url')
 .get(function () {
-  return '/catalog/address/' + this._id;
+  return '/catalog/address/' + this.id;
 });
 
 //Export model

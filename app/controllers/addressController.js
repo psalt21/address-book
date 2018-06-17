@@ -16,13 +16,26 @@ exports.index = function(req, res) {
 };
 
 // Display list of all Addresses.
-exports.address_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: Address list');
+exports.address_list = function(req, res, next) {
+    Address.find({}, 'address first_name last_name')
+    .populate('addresses')
+    .exec(function (err, list_addresses) {
+      if (err) { return next(err); }
+      //Successful, so render
+      res.render('address_list', { title: 'Address List', address_list: list_addresses });
+    });
 };
 
 // Display detail page for a specific Address.
-exports.address_detail = function(req, res) {
-    res.send('NOT IMPLEMENTED: Address detail: ' + req.params.id);
+exports.address_detail = function(req, res, next) {
+    Address.find({}, req.params.id)
+    .populate('address')
+    .exec(function (err, detail_address) {
+        if (err) { return next(err);}
+        // Successful, so render
+        res.render(address_detail, {title: 'Address Detail', address_detail: detail_address});
+    });
+    
 };
 
 // Display Address create form on GET.
@@ -63,7 +76,8 @@ exports.address_create_post = [
             var address = new Address(
                 {
                     first_name: req.body.first_name,
-                    last_name: req.body.last_name
+                    last_name: req.body.last_name,
+                    address: req.body.address
                 });
             address.save(function (err) {
                 if (err) { return next(err); }

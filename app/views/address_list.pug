@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1= title
+  
+  ul
+  each address in address_list
+    li 
+     
+      |  (#{address.first_name} #{address.last_name}) #{' '}
+      a(href=address.url) #{address.address}
+
+  else
+    li There are no addresses.
