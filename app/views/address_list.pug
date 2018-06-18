@@ -6,7 +6,8 @@ block content
   ul
   each address in address_list
     li 
-      | (#{address.first_name} #{address.last_name}) #{' '} 
+      | #{address.first_name} #{address.last_name} #{' '} 
+      p
       a(href=address.url) #{address.address} 
       p
       a(href=address.url+'/delete') Delete Address

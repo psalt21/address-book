@@ -6,8 +6,13 @@
 
 li {
     list-style-type: none;
+    margin-bottom: 10px;
 }
 
 hr {
     margin: 6px 0px;
+}
+
+p {
+    margin: -7px 0px 10px 0px
 }
