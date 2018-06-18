@@ -33,7 +33,7 @@ exports.address_detail = function(req, res, next) {
     .exec(function (err, list_addresses) {
       if (err) { return next(err); }
       //Successful, so render
-      res.render('address_list', { title: 'Address List', address_list: list_addresses });
+      res.render('address_list', { title: 'Address Info', address_list: list_addresses });
     });
 };
 
