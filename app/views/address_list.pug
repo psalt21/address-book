@@ -5,13 +5,14 @@ block content
   
   ul
   each address in address_list
-    hr
+    hr.line
     li 
-      | #{address.first_name} #{address.last_name} #{' '} 
+      | <b>#{address.first_name}</b> <b>#{address.last_name}</b> 
       p
       a(href=address.url) #{address.address} 
       p
       a(href=address.url+'/delete') Delete Address 
+      
 
   else
     li There are no addresses.
