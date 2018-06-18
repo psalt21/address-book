@@ -10,13 +10,6 @@ var AddressSchema = new Schema(
   }
 );
 
-// Virtual for full name of person living at the address
-AddressSchema
-.virtual('name')
-.get(function () {
-  return this.last_name + ', ' + this.first_name;
-});
-
 // Virtual for address URL
 AddressSchema
 .virtual('url')

@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    h1 #{title}
+    p (#{address.first_name} #{address.last_name}) #{' '} #{address.address}
+  
+    p Do you really want to delete this Address?
+    
+    form(method='POST' action='')
+      div.form-group
+        input#addressid.form-control(type='hidden',name='addressid', required='true', value=address._id )
+
+      button.btn.btn-primary(type='submit') Delete

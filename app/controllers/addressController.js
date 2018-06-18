@@ -17,7 +17,7 @@ exports.index = function(req, res) {
 
 // Display list of all Addresses.
 exports.address_list = function(req, res, next) {
-    Address.find({}, 'address first_name last_name')
+    Address.find({}, '')
     .populate('addresses')
     .exec(function (err, list_addresses) {
       if (err) { return next(err); }
@@ -28,14 +28,13 @@ exports.address_list = function(req, res, next) {
 
 // Display detail page for a specific Address.
 exports.address_detail = function(req, res, next) {
-    Address.find({}, req.params.id)
-    .populate('address')
-    .exec(function (err, detail_address) {
-        if (err) { return next(err);}
-        // Successful, so render
-        res.render(address_detail, {title: 'Address Detail', address_detail: detail_address});
+    Address.find({_id:req.params.id}, '')
+    .populate('addresses')
+    .exec(function (err, list_addresses) {
+      if (err) { return next(err); }
+      //Successful, so render
+      res.render('address_list', { title: 'Address List', address_list: list_addresses });
     });
-    
 };
 
 // Display Address create form on GET.
@@ -78,10 +77,12 @@ exports.address_create_post = [
                     first_name: req.body.first_name,
                     last_name: req.body.last_name,
                     address: req.body.address
+                    
                 });
             address.save(function (err) {
                 if (err) { return next(err); }
                 // Successful - redirect to new address record.
+                console.log('address.url is set to:', address.url);
                 res.redirect(address.url);
             });
         }
@@ -89,13 +90,38 @@ exports.address_create_post = [
 ];
 
 // Display Address delete form on GET.
-exports.address_delete_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Address delete GET');
+exports.address_delete_get = function(req, res, next) {
+    async.parallel({
+        address: function(callback) {
+            Address.findById(req.params.id).exec(callback)
+        }
+    }, function(err, results) {
+        if (err) { return next(err); }
+        if (results.address==null) { // No results.
+            res.redirect('/catalog/addresses');
+        }
+        // Successful, so render.
+        res.render('address_delete', { title: 'Delete Address', address: results.address } );
+    });
 };
 
 // Handle Address delete on POST.
-exports.address_delete_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Address delete POST');
+exports.address_delete_post = function(req, res, next) {
+    async.parallel({
+        address: function(callback) {
+          Address.findById(req.body.addressid).exec(callback)
+            console.log('req.body.addressid is set to:', req.body.addressid);
+        },
+    }, function(err, results) {
+        if (err) { return next(err); }
+        // Success
+            // Delete address object
+            Address.findByIdAndRemove(req.body.addressid, function deleteAddress(err) {
+                if (err) { return next(err); }
+                // Success - go to address list
+                res.redirect('/catalog/addresses')
+            })
+    });
 };
 
 // Display Address update form on GET.
