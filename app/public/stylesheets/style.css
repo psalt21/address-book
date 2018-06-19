@@ -24,3 +24,7 @@ p {
 h2 {
     color: gray;
 }
+
+input {
+    max-width: 550px;
+}
