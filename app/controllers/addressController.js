@@ -15,7 +15,7 @@ exports.index = function(req, res) {
     });
 };
 
-// Display list of all Addresses.
+// Display list of all Addresses passed in.
 exports.address_list = function(req, res, next) {
     Address.find({}, '')
     .populate('addresses')
@@ -125,11 +125,75 @@ exports.address_delete_post = function(req, res, next) {
 };
 
 // Display Address update form on GET.
-exports.address_update_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Address update GET');
+exports.address_update_get = function(req, res, next) {
+    // Get first_name, last_name and address for form.
+    async.parallel({
+        address: function(callback) {
+          Address.find({_id:req.params.id}, '').populate('addresses').exec(callback);  
+        },
+        }, function(err, results) {
+            if (err) { return next(err); }
+            // Success.
+        console.log('results is set to:', results.address[0]);
+            res.render('update_form', { title: 'Update Address', address:results.address[0] });
+        });
 };
 
 // Handle Address update on POST.
-exports.address_update_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Address update POST');
+exports.address_update_post = function(req, res, next) {
+    // Validate fields.
+//    body('first_name').isLength({ min: 1 }).trim().withMessage('First name must be specified.')
+//        .isAlphanumeric().withMessage('First name has non-alphanumeric characters.'),
+//    body('last_name').isLength({ min: 1 }).trim().withMessage('Last name must be specified.')
+//        .isAlphanumeric().withMessage('Last name has non-alphanumeric characters.'),
+//    body('address').isLength({ min: 1 }).trim().withMessage('Address must be specified.'),
+//
+//    // Sanitize fields.
+//    sanitizeBody('first_name').trim().escape(),
+//    sanitizeBody('last_name').trim().escape(),
+//    sanitizeBody('address').trim().escape(),
+//
+//    // Process request after validation and sanitization.
+//    (req, res, next) => {
+//        
+//        console.log('INSIDE ADDRESS UPDATE POST CONTROLLER!');
+//
+//        // Extract the validation errors from a request.
+//        const errors = validationResult(req);
+//        
+//        console.log('req.body contains:', req.body);
+//        
+//        // Create an Address object with escaped/trimmed data and old id
+//        var address = new Address(
+//            {   first_name : req.body.first_name,
+//                last_name : req.body.last_name,
+//                address : req.body.address 
+//            });
+//
+//        if (!errors.isEmpty()) {
+//            // There are errors. Render form again with sanitized values/error messages.
+//
+//            // Get all authors and genres for form.
+//            async.parallel({
+//                addresses: function(callback) {
+//                    Address.find(callback);
+//                },
+//            }, function(err, results) {
+//                if (err) { return next(err); }
+//
+//                res.render('update_form', { title: 'Update Address', address:address, errors: errors.array() });
+//            });
+//            return;
+//        }
+//        else {
+//            // Data from form is valid. Update the record.
+//            console.log('Inside successfully validated data conditional');
+//            Address.findByIdAndUpdate(req.params.id, address, {}, function (err,theaddresss) {
+//                if (err) { return next(err); }
+//                   // Successful - redirect to addresses page.
+//                   res.redirect(theaddress.url);
+//                });
+//        }
+//    }
+
 };
