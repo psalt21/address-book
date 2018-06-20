@@ -1,5 +1,5 @@
 //During the test the env variable is set to test
-process.env.NODE_ENV = 'test';
+//process.env.NODE_ENV = 'test';
 
 let mongoose = require("mongoose");
 let Address = require('../models/address');
@@ -28,5 +28,20 @@ describe('Addresses', () => {
             });
       });
   });
+    
+   /*
+  * Test the /Get create address form
+  */
+  describe('/GET create address form', () => {
+      it('it should pull up the create address form', (done) => {
+        chai.request(server)
+            .post('/catalog/address/create')
+            .end((err, res) => {
+                res.should.have.status(200);
+              done();
+            });
+      });
+
+  }); 
 
 });
