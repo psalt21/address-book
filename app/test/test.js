@@ -35,7 +35,7 @@ describe('Addresses', () => {
   describe('/GET create address form', () => {
       it('it should pull up the create address form', (done) => {
         chai.request(server)
-            .post('/catalog/address/create')
+            .get('/catalog/address/create')
             .end((err, res) => {
                 res.should.have.status(200);
               done();
@@ -45,3 +45,17 @@ describe('Addresses', () => {
   }); 
 
 });
+
+/*
+ * Test getting an existing address
+ */
+    describe('/GET specific existing address', () => {
+       it('it shoulld GET the address with id \'5b25c999ff59ab00b804a5f9\'', (done) => {
+         chai.request(server)
+            .get('/catalog/address/5b25c999ff59ab00b804a5f9')
+            .end((err, res) => {
+                res.should.have.status(200);
+                done();
+          });
+       });
+    });
