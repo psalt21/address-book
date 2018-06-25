@@ -9,12 +9,13 @@ let chai = require('chai');
 let chaiHttp = require('chai-http');
 let server = require('../app');
 let should = chai.should();
+let currentAddressId = null;
 
 chai.use(chaiHttp);
 //Our parent block
 describe('Addresses', () => {
 /*
-  * Test the /GET route
+  * Test the /GET route (READING)
   */
   describe('/GET addresses', () => {
       it('it should GET all the addresses', (done) => {
@@ -28,34 +29,69 @@ describe('Addresses', () => {
             });
       });
   });
-    
-   /*
+    /*
   * Test the /Get create address form
   */
-  describe('/GET create address form', () => {
-      it('it should pull up the create address form', (done) => {
-        chai.request(server)
-            .get('/catalog/address/create')
+    describe('/GET create address form', () => {
+          it('it should pull up the create address form', (done) => {
+            chai.request(server)
+                .get('/catalog/address/create')
+                .end((err, res) => {
+                    res.should.have.status(200);
+                  done();
+                });
+          });
+
+      });
+    /*
+     * Test CREATING and then getting (READING) the new address
+     */
+    describe('create and then /GET/:id address', () => {
+      it('it should create a new address and then GET it by id', (done) => {
+        let address = new Address({ first_name: "testFirstNameUnique1", last_name: "testLastNameUnique1", address: "testAddressUnique1" });
+        address.save((err, address) => {
+            // save current address.id to global variable to use in other test
+            currentAddressId = address.id;
+            chai.request(server)
+            .get('/catalog/address/' + address.id)
+            .send(address)
             .end((err, res) => {
                 res.should.have.status(200);
+                res.body.should.be.a('object');
               done();
             });
+        });
+
       });
-
   }); 
-
-});
-
-/*
- * Test getting an existing address
- */
-    describe('/GET specific existing address', () => {
-       it('it shoulld GET the address with id \'5b25c999ff59ab00b804a5f9\'', (done) => {
-         chai.request(server)
-            .get('/catalog/address/5b25c999ff59ab00b804a5f9')
+    /*
+     * Test UPDATING address created in previous test
+     */
+    describe('/post/catalog/address/:id/update', () => {
+        it('it should UPDATE an address by the given id', (done) => {
+           chai.request(server)
+            .post('/catalog/address/' + currentAddressId + '/update')
+            .send({first_name: "updatedTestFirstName", last_name: "updatedTestLastName", address: "updatedTestAddress"})
             .end((err, res) => {
                 res.should.have.status(200);
-                done();
-          });
-       });
+                res.body.should.be.a('object');
+               done();
+            });
+        });
     });
+//    /*
+//     * Test DELETING address created in previous test
+//     */
+//    describe('/post/catalog/address/:id/delete', () => {
+//        it('it should DELETE an address by the given id', (done) => {
+//           chai.request(server)
+//            .post('/catalog/address/' + currentAddressId + '/delete')
+//            .end((err, res) => {
+//                res.should.have.status(200);
+//                res.body.should.be.a('object');
+//               done();
+//            });
+//        });
+//    });
+    
+});
