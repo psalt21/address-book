@@ -21,7 +21,7 @@ app.use('/catalog', catalogRouter);  // Add catalog routes to middleware chain.
 
 //Set up mongoose connection
 const mongoose = require('mongoose');
-const mongoDB = 'mongodb://psalt21:Techguru1@ds259820.mlab.com:59820/address_book';
+const mongoDB = process.env.MONGODB_URI || 'mongodb://psalt21:Techguru1@ds259820.mlab.com:59820/address_book';
 mongoose.connect(mongoDB);
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
