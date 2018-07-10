@@ -6,8 +6,18 @@ const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
 const catalogRouter = require('./routes/catalog');  //Import routes for "catalog" area of site
+var compression = require('compression');
+var helmet = require('helmet');
 
 const app = express();
+
+app.use(helmet());
+app.use(compression()); //Compress all routes
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/', indexRouter);
+app.use('/catalog', catalogRouter);  // Add catalog routes to middleware chain.
 
 //Set up mongoose connection
 const mongoose = require('mongoose');
